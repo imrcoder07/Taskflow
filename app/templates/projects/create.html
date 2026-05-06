@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}New Project — TaskFlow{% endblock %}
+
+{% block body %}
+<div class="max-w-xl mx-auto">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-xl font-bold text-white">Create New Project</h1>
+      <p class="text-sm mt-0.5" style="color:#6B7280;">Define a new initiative for your team</p>
+    </div>
+    <a href="{{ url_for('projects.index') }}" class="btn-secondary" style="padding:8px 16px; font-size:13px;">Cancel</a>
+  </div>
+
+  <div class="card p-6">
+    <form method="POST" action="{{ url_for('projects.create') }}" class="space-y-5">
+      {{ form.hidden_tag() }}
+
+      <div>
+        {{ form.name.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
+        {{ form.name(class="input-field" + (" input-field-error" if form.name.errors else ""), placeholder="e.g., Q3 Marketing Campaign") }}
+        {% for error in form.name.errors %}
+          <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div>
+        {{ form.description.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
+        {{ form.description(class="input-field" + (" input-field-error" if form.description.errors else ""), placeholder="Briefly describe the project goals...", rows=4, style="resize:none; height:100px;") }}
+        {% for error in form.description.errors %}
+          <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-3">
+        <a href="{{ url_for('projects.index') }}" class="btn-ghost">Cancel</a>
+        {{ form.submit(class="btn-primary", style="cursor:pointer; border:none;") }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

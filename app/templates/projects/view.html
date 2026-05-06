@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} — TaskFlow{% endblock %}
+
+{% block body %}
+<!-- Breadcrumb + Header -->
+<div class="mb-7">
+  <nav class="flex items-center gap-2 text-xs mb-4" style="color:#4B5563;">
+    <a href="{{ url_for('projects.index') }}" class="hover:text-indigo-400 transition-colors font-medium">Projects</a>
+    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    <span style="color:#9CA3AF;">{{ project.name }}</span>
+  </nav>
+
+  <div class="flex items-start justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2)); border:1px solid rgba(99,102,241,0.25);">
+        <svg class="w-5 h-5" style="color:#818CF8;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-white leading-tight">{{ project.name }}</h1>
+        <div class="flex items-center gap-3 mt-1 text-xs" style="color:#4B5563;">
+          <span>by {{ project.creator.name }}</span>
+          <span>·</span>
+          <span>{{ project.created_at.strftime('%B %d, %Y') }}</span>
+        </div>
+      </div>
+    </div>
+
+    {% if current_user.is_admin %}
+    <a href="{{ url_for('tasks.create', project_id=project.id) }}" class="btn-primary flex-shrink-0" style="display:inline-flex; align-items:center; gap:6px;">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      Add Task
+    </a>
+    {% endif %}
+  </div>
+
+  {% if project.description %}
+  <p class="text-sm mt-4 max-w-2xl" style="color:#6B7280;">{{ project.description }}</p>
+  {% endif %}
+</div>
+
+<!-- Task Stats mini bar -->
+{% set all_tasks = project.tasks | list %}
+{% if all_tasks %}
+{% set done_count = all_tasks | selectattr('status', 'equalto', 'done') | list | length %}
+{% set total_count = all_tasks | length %}
+<div class="card p-4 mb-6 flex items-center gap-6">
+  <div class="text-sm">
+    <span class="font-semibold text-white">{{ total_count }}</span>
+    <span style="color:#6B7280;"> total</span>
+  </div>
+  <div class="text-sm">
+    <span class="font-semibold" style="color:#10B981;">{{ done_count }}</span>
+    <span style="color:#6B7280;"> done</span>
+  </div>
+  <div class="text-sm">
+    <span class="font-semibold" style="color:#F59E0B;">{{ total_count - done_count }}</span>
+    <span style="color:#6B7280;"> remaining</span>
+  </div>
+  <!-- Progress bar -->
+  <div class="flex-1 h-1.5 rounded-full ml-2" style="background:#1F2937; max-width:180px;">
+    {% set pct = ((done_count / total_count) * 100) | int if total_count > 0 else 0 %}
+    <div class="h-1.5 rounded-full transition-all" {{ ('style="width: ' ~ pct ~ '%; background: linear-gradient(90deg, #6366F1, #10B981);"') | safe }}></div>
+  </div>
+  <span class="text-xs font-medium" style="color:#6B7280;">{{ pct }}% complete</span>
+</div>
+{% endif %}
+
+<!-- Tasks List -->
+<div class="card">
+  <div class="px-6 py-4" style="border-bottom:1px solid #1F2937;">
+    <h2 class="text-sm font-semibold text-white">Tasks</h2>
+  </div>
+
+  {% if all_tasks %}
+  <div class="divide-y divide-gray-800">
+    {% for task in all_tasks %}
+    <div class="flex items-center justify-between px-6 py-4 group hover:bg-white/[0.02] transition-colors">
+      <div class="flex items-center gap-3 min-w-0">
+        <!-- Status indicator -->
+        {% if task.status == 'done' %}
+        <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:#10B981;"></div>
+        {% elif task.status == 'in_progress' %}
+        <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:#818CF8;"></div>
+        {% else %}
+        <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:#F59E0B;"></div>
+        {% endif %}
+
+        <div class="min-w-0">
+          <h4 class="text-sm font-medium text-white truncate">{{ task.title }}</h4>
+          {% if task.description %}
+          <p class="text-xs mt-0.5 truncate max-w-md" style="color:#4B5563;">{{ task.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 flex-shrink-0 ml-4">
+        <!-- Assignee -->
+        {% if task.assignee %}
+        <div class="hidden sm:flex items-center gap-1.5">
+          <div class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style="background:#374151;">
+            {{ task.assignee.name[0].upper() }}
+          </div>
+          <span class="text-xs" style="color:#6B7280;">{{ task.assignee.name }}</span>
+        </div>
+        {% else %}
+        <span class="text-xs hidden sm:block" style="color:#374151;">Unassigned</span>
+        {% endif %}
+
+        <!-- Due Date -->
+        {% if task.due_date %}
+        <span class="text-xs hidden md:block" style="color:#6B7280;">{{ task.due_date.strftime('%b %d') }}</span>
+        {% endif %}
+
+        <!-- Status Badge -->
+        {% if task.status == 'pending' %}
+        <span class="badge badge-pending">To Do</span>
+        {% elif task.status == 'in_progress' %}
+        <span class="badge badge-progress">In Progress</span>
+        {% elif task.status == 'done' %}
+        <span class="badge badge-done">Done</span>
+        {% endif %}
+
+        <!-- Edit -->
+        {% if current_user.is_admin or task.assigned_to == current_user.id %}
+        <a href="{{ url_for('tasks.edit', task_id=task.id) }}" class="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded" style="color:#6B7280;" onmouseover="this.style.color='#818CF8'; this.style.background='#1F2937'" onmouseout="this.style.color='#6B7280'; this.style.background='transparent'">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <!-- Empty state -->
+  <div class="flex flex-col items-center justify-center py-16 text-center">
+    <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-3" style="background:#1F2937;">
+      <svg class="w-6 h-6" style="color:#4B5563;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+    </div>
+    <p class="text-sm font-medium" style="color:#6B7280;">No tasks in this project yet.</p>
+    {% if current_user.is_admin %}
+    <a href="{{ url_for('tasks.create', project_id=project.id) }}" class="btn-primary mt-4" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; padding:8px 16px;">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      Create first task
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
