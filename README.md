@@ -15,6 +15,10 @@ TaskFlow is a role-based task and project management system built with Flask and
 - **Project & Task Management:**
   - Create and manage distinct projects.
   - Create tasks within projects, assign due dates, and track statuses (`Pending`, `In Progress`, `Done`).
+- **REST API:**
+  - JSON endpoints under `/api` for project and task CRUD operations.
+  - Uses the existing Flask session authentication and role-based permissions.
+  - Admins can create, update, and delete projects/tasks; members can view assigned tasks and update task status.
 - **Dynamic Dashboard:**
   - Real-time aggregated statistics showing total tasks, pending tasks, completed tasks, and overdue tasks.
   - Segmented data visibility: Admins see system-wide stats, while members see metrics tailored strictly to their assigned tasks.
@@ -25,16 +29,41 @@ TaskFlow is a role-based task and project management system built with Flask and
 ## 💻 Tech Stack
 
 - **Backend:** Python 3, Flask 3.1, SQLAlchemy 2.0 (via Flask-SQLAlchemy)
-- **Database:** PostgreSQL (production ready via `psycopg2-binary`), SQLite (for local development/testing)
+- **Database:** PostgreSQL for development and production via `psycopg2-binary`; SQLite is retained as a fallback/testing database.
 - **Frontend:** HTML5, Jinja2, Tailwind CSS (CDN)
 - **Testing:** Pytest, Pytest-Flask
 - **Server:** Gunicorn (production WSGI server)
 
 ## 🛠 Setup & Installation
 
+## REST API
+
+The app includes REST API routes alongside the existing Jinja pages. Log in through the normal `/auth/login` page first, then call the JSON endpoints using the same session.
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/projects` | List projects |
+| `POST` | `/api/projects` | Create a project, admin only |
+| `GET` | `/api/projects/<id>` | Get one project with tasks |
+| `PUT` | `/api/projects/<id>` | Update a project, admin only |
+| `DELETE` | `/api/projects/<id>` | Delete a project, admin only |
+| `GET` | `/api/tasks` | List all tasks for admins, assigned tasks for members |
+| `POST` | `/api/tasks` | Create a task, admin only |
+| `GET` | `/api/tasks/<id>` | Get one task |
+| `PUT` | `/api/tasks/<id>` | Update a task; members can update status only |
+| `DELETE` | `/api/tasks/<id>` | Delete a task, admin only |
+
+Example JSON request:
+
+```bash
+curl -X POST https://your-app.onrender.com/api/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title":"API Task","status":"pending","project_id":1,"assigned_to":2}'
+```
+
 ### Prerequisites
 - Python 3.10+
-- (Optional) PostgreSQL database if deploying to production.
+- PostgreSQL database for development/production.
 
 ### Local Development
 
@@ -63,11 +92,11 @@ TaskFlow is a role-based task and project management system built with Flask and
    ```env
    APP_ENV=development
    SECRET_KEY=your-super-secret-development-key
-   # DATABASE_URL=postgresql://user:password@localhost/taskflow (Optional for local, uses SQLite by default)
+   DATABASE_URL=postgresql://user:password@localhost/taskflow
    ```
 
-5. **Initialize the Database & Create Admin:**
-   Running the app for the first time will automatically create the SQLite database and provision a default administrator account.
+5. **Initialize the Database:**
+   Running the app for the first time will automatically create the required tables in the configured PostgreSQL database. If `DATABASE_URL` is not set, the app falls back to a local SQLite database.
    ```bash
    python run.py
    ```
