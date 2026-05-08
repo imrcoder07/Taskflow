@@ -50,22 +50,34 @@
       <div class="grid grid-cols-2 gap-5">
         <div>
           {{ form.status.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
-          {{ form.status(class="input-field", style="cursor:pointer;") }}
+          {{ form.status(class="input-field" + (" input-field-error" if form.status.errors else ""), style="cursor:pointer;") }}
+          {% for error in form.status.errors %}
+            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+          {% endfor %}
         </div>
         <div>
           {{ form.project_id.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
-          {{ form.project_id(class="input-field", style="cursor:pointer;") }}
+          {{ form.project_id(class="input-field" + (" input-field-error" if form.project_id.errors else ""), style="cursor:pointer;") }}
+          {% for error in form.project_id.errors %}
+            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+          {% endfor %}
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-5">
         <div>
           {{ form.assigned_to.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
-          {{ form.assigned_to(class="input-field", style="cursor:pointer;") }}
+          {{ form.assigned_to(class="input-field" + (" input-field-error" if form.assigned_to.errors else ""), style="cursor:pointer;") }}
+          {% for error in form.assigned_to.errors %}
+            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+          {% endfor %}
         </div>
         <div>
           {{ form.due_date.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
-          {{ form.due_date(class="input-field", type="date") }}
+          {{ form.due_date(class="input-field" + (" input-field-error" if form.due_date.errors else ""), type="date") }}
+          {% for error in form.due_date.errors %}
+            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+          {% endfor %}
         </div>
       </div>
 
@@ -77,7 +89,10 @@
       </div>
       <div class="max-w-xs">
         {{ form.status.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
-        {{ form.status(class="input-field", style="cursor:pointer;") }}
+        {{ form.status(class="input-field" + (" input-field-error" if form.status.errors else ""), style="cursor:pointer;") }}
+        {% for error in form.status.errors %}
+          <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+        {% endfor %}
       </div>
       {% endif %}
 

@@ -25,9 +25,13 @@ def create():
     # Pre-select project if passed in query string
     if request.method == "GET" and request.args.get("project_id"):
         try:
-            form.project_id.data = int(request.args.get("project_id"))
+            project_id = int(request.args.get("project_id"))
+            if db.session.get(Project, project_id):
+                form.project_id.data = project_id
+            else:
+                flash("Selected project does not exist.", "warning")
         except ValueError:
-            pass
+            flash("Selected project is invalid.", "warning")
 
     if form.validate_on_submit():
         task = Task(
