@@ -100,7 +100,17 @@ curl -X POST https://your-app.onrender.com/api/tasks \
    ```bash
    python run.py
    ```
-   **Default Admin Credentials:**
+   **Admin Credentials:**
+   Set these environment variables before deployment to create an admin account automatically. This does not add any public UI for creating admin accounts.
+   ```env
+   ADMIN_NAME=TaskFlow Admin
+   ADMIN_EMAIL=admin@taskflow.com
+   ADMIN_PASSWORD=Admin123!
+   ADMIN_RESET_PASSWORD=false
+   ```
+   If the email already exists, the app keeps the existing password and only upgrades the user role to admin. To reset the password for an existing admin, temporarily set `ADMIN_RESET_PASSWORD=true`, deploy once, then change it back to `false`.
+
+   Local development example:
    - **Email:** `admin@taskflow.com`
    - **Password:** `Admin123!`
 
