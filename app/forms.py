@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError, Optional, Regexp
@@ -64,6 +66,10 @@ class TaskForm(FlaskForm):
     assigned_to = SelectField("Assign To", coerce=int)
     submit = SubmitField("Save Task")
 
+    def __init__(self, *args, allow_past_due_date=False, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.allow_past_due_date = allow_past_due_date
+
     def validate_title(self, title):
         if not _stripped(title.data):
             raise ValidationError("Task title cannot be blank.")
@@ -75,6 +81,10 @@ class TaskForm(FlaskForm):
     def validate_status(self, status):
         if status.data not in Task.VALID_STATUSES:
             raise ValidationError("Choose a valid task status.")
+
+    def validate_due_date(self, due_date):
+        if due_date.data and not self.allow_past_due_date and due_date.data < date.today():
+            raise ValidationError("Due date cannot be earlier than today.")
 
     def validate_project_id(self, project_id):
         if not db_get(Project, project_id.data):

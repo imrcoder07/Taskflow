@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
 from flask_login import login_required, current_user
 from app import db
@@ -21,6 +23,7 @@ def create():
 
     form = TaskForm()
     _populate_task_form_choices(form)
+    min_due_date = date.today().isoformat()
 
     # Pre-select project if passed in query string
     if request.method == "GET" and request.args.get("project_id"):
@@ -47,7 +50,7 @@ def create():
         flash("Task created successfully!", "success")
         return redirect(url_for("projects.view", project_id=task.project_id))
 
-    return render_template("tasks/form.html", form=form, title="Create Task")
+    return render_template("tasks/form.html", form=form, title="Create Task", min_due_date=min_due_date)
 
 
 @tasks.route("/<int:task_id>/edit", methods=["GET", "POST"])
@@ -65,7 +68,7 @@ def edit(task_id):
         return redirect(url_for("projects.view", project_id=task.project_id))
 
     if current_user.is_admin:
-        form = TaskForm(obj=task)
+        form = TaskForm(obj=task, allow_past_due_date=True)
         _populate_task_form_choices(form)
 
         # Convert None to 0 for the unassigned choice

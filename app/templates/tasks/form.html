@@ -74,7 +74,11 @@
         </div>
         <div>
           {{ form.due_date.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
-          {{ form.due_date(class="input-field" + (" input-field-error" if form.due_date.errors else ""), type="date") }}
+          {% if min_due_date %}
+            {{ form.due_date(class="input-field" + (" input-field-error" if form.due_date.errors else ""), type="date", min=min_due_date) }}
+          {% else %}
+            {{ form.due_date(class="input-field" + (" input-field-error" if form.due_date.errors else ""), type="date") }}
+          {% endif %}
           {% for error in form.due_date.errors %}
             <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
           {% endfor %}
