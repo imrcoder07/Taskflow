@@ -9,7 +9,7 @@
     <!-- Logo -->
     <div class="text-center mb-8">
       <a href="{{ url_for('main.index') }}" class="inline-flex flex-col items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl flex items-center justify-center shadow-xl" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);">
+        <div class="w-11 h-11 rounded-2xl flex items-center justify-center shadow-xl" style="background:linear-gradient(135deg,#8B5CF6,#7C3AED);">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
@@ -17,7 +17,7 @@
         <span class="text-lg font-bold text-white tracking-tight">TaskFlow</span>
       </a>
       <h1 class="mt-5 text-xl font-bold text-white">Create your account</h1>
-      <p class="mt-1 text-sm" style="color:#6B7280;">Start managing projects and tasks today</p>
+      <p class="mt-1 text-sm text-muted">Start managing projects and tasks today</p>
     </div>
 
     <!-- Card -->
@@ -26,42 +26,42 @@
         {{ form.hidden_tag() }}
 
         <div>
-          <label for="name" class="block text-xs font-semibold uppercase tracking-wide mb-2" style="color:#9CA3AF;">{{ form.name.label.text }}</label>
+          <label for="name" class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted">{{ form.name.label.text }}</label>
           <input type="text" id="name" name="name" value="{{ form.name.data or '' }}"
             placeholder="Jane Smith" autocomplete="name"
             class="input-field {% if form.name.errors %}input-field-error{% endif %}" />
           {% for error in form.name.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
 
         <div>
-          <label for="email" class="block text-xs font-semibold uppercase tracking-wide mb-2" style="color:#9CA3AF;">{{ form.email.label.text }}</label>
+          <label for="email" class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted">{{ form.email.label.text }}</label>
           <input type="email" id="email" name="email" value="{{ form.email.data or '' }}"
             placeholder="you@example.com" autocomplete="email"
             class="input-field {% if form.email.errors %}input-field-error{% endif %}" />
           {% for error in form.email.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
 
         <div>
-          <label for="password" class="block text-xs font-semibold uppercase tracking-wide mb-2" style="color:#9CA3AF;">{{ form.password.label.text }}</label>
+          <label for="password" class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted">{{ form.password.label.text }}</label>
           <input type="password" id="password" name="password"
             placeholder="Min. 8 characters" autocomplete="new-password"
             class="input-field {% if form.password.errors %}input-field-error{% endif %}" />
           {% for error in form.password.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
 
         <div>
-          <label for="confirm_password" class="block text-xs font-semibold uppercase tracking-wide mb-2" style="color:#9CA3AF;">{{ form.confirm_password.label.text }}</label>
+          <label for="confirm_password" class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted">{{ form.confirm_password.label.text }}</label>
           <input type="password" id="confirm_password" name="confirm_password"
             placeholder="Repeat your password" autocomplete="new-password"
             class="input-field {% if form.confirm_password.errors %}input-field-error{% endif %}" />
           {% for error in form.confirm_password.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
 
@@ -73,9 +73,9 @@
       </form>
     </div>
 
-    <p class="text-center text-sm mt-5" style="color:#6B7280;">
+    <p class="text-center text-sm mt-5 text-muted">
       Already have an account?
-      <a href="{{ url_for('auth.login') }}" class="font-medium transition-colors" style="color:#818CF8;" onmouseover="this.style.color='#A5B4FC'" onmouseout="this.style.color='#818CF8'">Sign in</a>
+      <a href="{{ url_for('auth.login') }}" class="accent-link font-medium">Sign in</a>
     </p>
   </div>
 </div>

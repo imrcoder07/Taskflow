@@ -1,15 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Projects — TaskFlow{% endblock %}
+{% block title %}Projects - TaskFlow{% endblock %}
 
 {% block body %}
-<!-- Header -->
-<div class="flex items-center justify-between mb-8">
+<div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
   <div>
-    <h1 class="text-2xl font-bold text-white">Projects</h1>
-    <p class="text-sm mt-0.5" style="color:#6B7280;">Manage your team's initiatives</p>
+    <h1 class="page-title text-2xl">Projects</h1>
+    <p class="page-kicker text-sm mt-2">Manage your team's active initiatives</p>
   </div>
   {% if current_user.is_admin %}
-  <a href="{{ url_for('projects.create') }}" class="btn-primary" style="display:inline-flex; align-items:center; gap:6px;">
+  <a href="{{ url_for('projects.create') }}" class="btn-primary inline-flex items-center gap-2">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
     New Project
   </a>
@@ -21,24 +20,23 @@
   {% for project in projects %}
   <a href="{{ url_for('projects.view', project_id=project.id) }}" class="block group">
     <div class="card card-hover h-full p-6 flex flex-col">
-      <!-- Project icon + name -->
-      <div class="flex items-start gap-3 mb-3">
-        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2)); border:1px solid rgba(99,102,241,0.2);">
-          <svg class="w-4 h-4" style="color:#818CF8;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+      <div class="flex items-start gap-3 mb-4">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-violet-500/10 border border-violet-400/10">
+          <svg class="w-4 h-4 text-violet-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
         </div>
         <div class="min-w-0">
-          <h3 class="font-semibold text-white group-hover:text-indigo-400 transition-colors text-sm leading-snug">{{ project.name }}</h3>
-          <p class="text-xs mt-0.5" style="color:#4B5563;">{{ project.tasks | list | length }} task{{ 's' if project.tasks | list | length != 1 else '' }}</p>
+          <h3 class="font-semibold text-white group-hover:text-violet-200 transition-colors text-sm leading-snug">{{ project.name }}</h3>
+          <p class="text-xs mt-1 text-muted-low">{{ project.tasks | list | length }} task{{ 's' if project.tasks | list | length != 1 else '' }}</p>
         </div>
       </div>
 
-      <p class="text-sm flex-1 mb-4 line-clamp-2" style="color:#6B7280;">
+      <p class="text-sm flex-1 mb-5 line-clamp-2 text-muted">
         {{ project.description or "No description provided." }}
       </p>
 
-      <div class="flex items-center justify-between pt-3" style="border-top:1px solid #1F2937;">
-        <span class="text-xs" style="color:#4B5563;">{{ project.created_at.strftime('%b %d, %Y') }}</span>
-        <span class="text-xs font-medium" style="color:#6B7280;">{{ project.creator.name }}</span>
+      <div class="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+        <span class="text-xs text-muted-low">{{ project.created_at.strftime('%b %d, %Y') }}</span>
+        <span class="text-xs font-medium text-muted">{{ project.creator.name }}</span>
       </div>
     </div>
   </a>
@@ -46,13 +44,12 @@
 </div>
 
 {% else %}
-<!-- Empty state -->
 <div class="card flex flex-col items-center justify-center py-20 text-center">
-  <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4" style="background:#1F2937;">
-    <svg class="w-7 h-7" style="color:#4B5563;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+  <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-white/[0.03] border border-white/[0.06]">
+    <svg class="w-7 h-7 text-muted-low" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
   </div>
   <h3 class="font-semibold text-white mb-1">No projects yet</h3>
-  <p class="text-sm mb-6" style="color:#6B7280;">Get started by creating your first project.</p>
+  <p class="text-sm mb-6 text-muted">Create the first workspace initiative to start organizing tasks.</p>
   {% if current_user.is_admin %}
   <a href="{{ url_for('projects.create') }}" class="btn-primary">Create Project</a>
   {% endif %}

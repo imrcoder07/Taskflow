@@ -1,19 +1,18 @@
 {% extends "base.html" %}
-{% block title %}Dashboard — TaskFlow{% endblock %}
+{% block title %}Dashboard - TaskFlow{% endblock %}
 
 {% block body %}
 <div class="max-w-6xl mx-auto">
-  <!-- Page Header -->
-  <div class="flex items-center justify-between mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
     <div>
-      <h1 class="text-2xl font-bold text-white">Dashboard</h1>
-      <p class="text-sm mt-1" style="color:#9CA3AF;">
+      <h1 class="page-title text-2xl">Dashboard</h1>
+      <p class="page-kicker text-sm mt-2">
         Welcome back, <span class="font-medium text-white">{{ current_user.name }}</span>
-        <span class="ml-2 px-2 py-0.5 rounded text-xs font-medium" style="background:#2A1A1A; color:#F3F4F6; border:1px solid #374151;">{{ current_user.role | capitalize }}</span>
+        <span class="ml-2 px-2 py-0.5 rounded-md text-xs font-medium bg-violet-500/10 text-violet-200 border border-violet-400/10">{{ current_user.role | capitalize }}</span>
       </p>
     </div>
     {% if current_user.is_admin %}
-    <a href="{{ url_for('projects.create') }}" class="btn-primary" style="display:inline-flex; align-items:center; gap:6px;">
+    <a href="{{ url_for('projects.create') }}" class="btn-primary inline-flex items-center gap-2">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
       New Project
     </a>
@@ -21,72 +20,67 @@
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
-    <!-- Left Column: Stats -->
     <div class="lg:col-span-2 grid grid-cols-2 gap-4 h-max">
-      <!-- Total -->
       <div class="card p-5">
-        <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color:#9CA3AF;">Total Tasks</p>
+        <p class="text-[11px] font-semibold uppercase tracking-wider mb-2 text-muted">Total Tasks</p>
         <p class="text-3xl font-bold text-white">{{ stats.total }}</p>
-        <p class="text-xs mt-1.5" style="color:#6B7280;">Across projects</p>
+        <p class="text-xs mt-1.5 text-muted-low">Across projects</p>
       </div>
-      <!-- Pending -->
-      <div class="card p-5 relative overflow-hidden border-[#F43F5E]/20 bg-[#181212]">
-        <div class="absolute top-0 right-0 w-16 h-16 bg-[#F43F5E]/5 blur-2xl rounded-full"></div>
-        <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color:#F43F5E;">Pending</p>
+      <div class="card p-5">
+        <p class="text-[11px] font-semibold uppercase tracking-wider mb-2 text-amber-300">Pending</p>
         <p class="text-3xl font-bold text-white">{{ stats.pending }}</p>
-        <p class="text-xs mt-1.5" style="color:#6B7280;">Action required</p>
+        <p class="text-xs mt-1.5 text-muted-low">Awaiting progress</p>
       </div>
-      <!-- Completed -->
       <div class="card p-5">
-        <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color:#9CA3AF;">Completed</p>
+        <p class="text-[11px] font-semibold uppercase tracking-wider mb-2 text-emerald-300">Completed</p>
         <p class="text-3xl font-bold text-white">{{ stats.completed }}</p>
-        <p class="text-xs mt-1.5" style="color:#6B7280;">Marked as done</p>
+        <p class="text-xs mt-1.5 text-muted-low">Marked as done</p>
       </div>
-      <!-- Overdue -->
       <div class="card p-5">
-        <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color:#9CA3AF;">Overdue</p>
-        <p class="text-3xl font-bold" style="color:#EF4444;">{{ stats.overdue }}</p>
-        <p class="text-xs mt-1.5" style="color:#6B7280;">Past due date</p>
+        <p class="text-[11px] font-semibold uppercase tracking-wider mb-2 text-red-300">Overdue</p>
+        <p class="text-3xl font-bold text-white">{{ stats.overdue }}</p>
+        <p class="text-xs mt-1.5 text-muted-low">Past due date</p>
       </div>
     </div>
 
-    <!-- Right Column: My Tasks Section -->
     <div class="lg:col-span-3">
       <div class="card p-6 h-full flex flex-col">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-lg font-semibold text-white">My Tasks</h2>
-          <a href="{{ url_for('projects.index') }}" class="btn-ghost" style="padding:6px 12px; font-size:13px; display:inline-flex; align-items:center; gap:4px;">
-            View all projects
+          <div>
+            <h2 class="text-lg font-semibold text-white">My Tasks</h2>
+            <p class="text-xs text-muted mt-1">Your assigned work, ordered by recent activity</p>
+          </div>
+          <a href="{{ url_for('projects.index') }}" class="btn-ghost inline-flex items-center gap-1.5 !px-3 !py-2 !text-xs">
+            View projects
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </a>
         </div>
 
         {% if tasks %}
-        <div class="space-y-4 flex-1">
+        <div class="space-y-3 flex-1">
           {% for task in tasks %}
-          <div class="card card-hover flex flex-col sm:flex-row sm:items-center justify-between px-6 py-5 group cursor-pointer relative gap-4 sm:gap-0">
+          <div class="card card-hover flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 group cursor-pointer relative gap-4">
             <div class="flex items-center gap-4 min-w-0">
-              <!-- Status dot -->
               {% if task.status == 'done' %}
-              <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:#10B981; box-shadow: 0 0 8px rgba(16,185,129,0.4);"></div>
+              <div class="w-2 h-2 rounded-full flex-shrink-0 bg-emerald-400"></div>
               {% elif task.status == 'in_progress' %}
-              <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:#818CF8; box-shadow: 0 0 8px rgba(129,140,248,0.4);"></div>
+              <div class="w-2 h-2 rounded-full flex-shrink-0 bg-violet-300"></div>
               {% else %}
-              <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:#F59E0B; box-shadow: 0 0 8px rgba(245,158,11,0.4);"></div>
+              <div class="w-2 h-2 rounded-full flex-shrink-0 bg-amber-300"></div>
               {% endif %}
 
               <div class="min-w-0">
-                <a href="{{ url_for('tasks.edit', task_id=task.id) }}" class="text-[15px] font-semibold text-gray-100 group-hover:text-[#F43F5E] transition-colors truncate block before:absolute before:inset-0">{{ task.title }}</a>
-                <p class="text-[11px] mt-1.5 font-medium tracking-wide" style="color:#6B7280;">{{ task.project.name | upper }}</p>
+                <a href="{{ url_for('tasks.edit', task_id=task.id) }}" class="text-[15px] font-semibold text-gray-100 group-hover:text-violet-200 transition-colors truncate block before:absolute before:inset-0">{{ task.title }}</a>
+                <p class="text-[11px] mt-1.5 font-medium tracking-wide text-muted-low">{{ task.project.name | upper }}</p>
               </div>
             </div>
 
-            <div class="flex items-center gap-5 flex-shrink-0 sm:ml-4">
+            <div class="flex items-center gap-4 flex-shrink-0 sm:ml-4">
               {% if task.due_date %}
               {% if task.status != 'done' and task.due_date < now %}
-              <span class="text-[11px] font-semibold hidden sm:block" style="color: #EF4444;">
+              <span class="text-[11px] font-semibold hidden sm:block text-red-300">
               {% else %}
-              <span class="text-[11px] font-medium hidden sm:block" style="color: #6B7280;">
+              <span class="text-[11px] font-medium hidden sm:block text-muted-low">
               {% endif %}
                 {{ task.due_date.strftime('%b %d') }}
               </span>
@@ -100,7 +94,7 @@
               <span class="badge badge-done">Done</span>
               {% endif %}
 
-              <div class="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 p-1.5 rounded" style="color:#6B7280;">
+              <div class="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 p-1.5 rounded text-muted-low">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
               </div>
             </div>
@@ -108,12 +102,12 @@
           {% endfor %}
         </div>
         {% else %}
-        <div class="flex-1 flex flex-col items-center justify-center text-center py-12 px-4" style="border:1px dashed #1F2937; border-radius:12px; background:#0B0F14;">
-          <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style="background:#141A1F; border:1px solid #1F2937;">
-            <svg class="w-5 h-5" style="color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        <div class="flex-1 flex flex-col items-center justify-center text-center py-12 px-4 rounded-xl border border-dashed border-white/[0.08] bg-white/[0.02]">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 bg-white/[0.03] border border-white/[0.06]">
+            <svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
           </div>
-          <p class="text-sm font-medium" style="color:#F3F4F6;">No tasks assigned to you yet.</p>
-          <p class="text-xs mt-1" style="color:#9CA3AF;">When tasks are assigned, they'll appear here.</p>
+          <p class="text-sm font-medium text-white">No tasks assigned yet</p>
+          <p class="text-xs mt-1 text-muted">Assigned tasks will appear here.</p>
         </div>
         {% endif %}
       </div>

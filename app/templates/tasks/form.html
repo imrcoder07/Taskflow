@@ -6,8 +6,8 @@
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-xl font-bold text-white">{{ title }}</h1>
-      <p class="text-sm mt-0.5" style="color:#6B7280;">
+      <h1 class="page-title text-xl">{{ title }}</h1>
+      <p class="text-sm mt-1 text-muted">
         {% if current_user.is_admin %}Assign details and track progress{% else %}Update the status of your task{% endif %}
       </p>
     </div>
@@ -31,77 +31,77 @@
 
       <div class="grid grid-cols-1 gap-5">
         <div>
-          {{ form.title.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
+          {{ form.title.label(class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted") }}
           {{ form.title(class="input-field", placeholder="e.g., Update landing page copy") }}
           {% for error in form.title.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
 
         <div>
-          {{ form.description.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
+          {{ form.description.label(class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted") }}
           {{ form.description(class="input-field", placeholder="Task details...", rows=3, style="resize:none; height:80px;") }}
           {% for error in form.description.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-5">
         <div>
-          {{ form.status.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
+          {{ form.status.label(class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted") }}
           {{ form.status(class="input-field" + (" input-field-error" if form.status.errors else ""), style="cursor:pointer;") }}
           {% for error in form.status.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
         <div>
-          {{ form.project_id.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
+          {{ form.project_id.label(class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted") }}
           {{ form.project_id(class="input-field" + (" input-field-error" if form.project_id.errors else ""), style="cursor:pointer;") }}
           {% for error in form.project_id.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-5">
         <div>
-          {{ form.assigned_to.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
+          {{ form.assigned_to.label(class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted") }}
           {{ form.assigned_to(class="input-field" + (" input-field-error" if form.assigned_to.errors else ""), style="cursor:pointer;") }}
           {% for error in form.assigned_to.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
         <div>
-          {{ form.due_date.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
+          {{ form.due_date.label(class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted") }}
           {% if min_due_date %}
             {{ form.due_date(class="input-field" + (" input-field-error" if form.due_date.errors else ""), type="date", min=min_due_date) }}
           {% else %}
             {{ form.due_date(class="input-field" + (" input-field-error" if form.due_date.errors else ""), type="date") }}
           {% endif %}
           {% for error in form.due_date.errors %}
-            <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+            <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
           {% endfor %}
         </div>
       </div>
 
       <!-- Member: show read-only task info + status only -->
       {% else %}
-      <div class="p-4 rounded-lg" style="background:#0B1120; border:1px solid #1F2937;">
+      <div class="p-4 rounded-lg bg-white/[0.03] border border-white/[0.06]">
         <h2 class="text-base font-semibold text-white mb-1">{{ task.title }}</h2>
-        <p class="text-sm" style="color:#6B7280;">{{ task.description or "No description provided." }}</p>
+        <p class="text-sm text-muted">{{ task.description or "No description provided." }}</p>
       </div>
       <div class="max-w-xs">
-        {{ form.status.label(class="block text-xs font-semibold uppercase tracking-wide mb-2", style="color:#9CA3AF;") }}
+        {{ form.status.label(class="block text-xs font-semibold uppercase tracking-wide mb-2 text-muted") }}
         {{ form.status(class="input-field" + (" input-field-error" if form.status.errors else ""), style="cursor:pointer;") }}
         {% for error in form.status.errors %}
-          <p class="mt-1.5 text-xs" style="color:#EF4444;">{{ error }}</p>
+          <p class="mt-1.5 text-xs text-red-300">{{ error }}</p>
         {% endfor %}
       </div>
       {% endif %}
 
       <!-- Actions -->
-      <div class="pt-2 flex items-center justify-between" style="border-top:1px solid #1F2937; padding-top:16px; margin-top:4px;">
+      <div class="pt-2 flex items-center justify-between border-t border-white/[0.06]" style="padding-top:16px; margin-top:4px;">
         {% if task and current_user.is_admin %}
         <button type="button" onclick="document.getElementById('delete-form-{{ task.id }}').submit();" class="btn-danger">
           Delete Task

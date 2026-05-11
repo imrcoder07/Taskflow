@@ -11,9 +11,9 @@
       theme: {
         extend: {
           colors: {
-            surface: { bg: '#0A0A0A', card: '#141414', border: '#262626' },
-            brand: { DEFAULT: '#F43F5E', hover: '#E11D48' },
-            content: { primary: '#F3F4F6', secondary: '#9CA3AF' }
+            surface: { bg: '#060816', card: '#0F172A', raised: '#111827', border: 'rgba(255,255,255,0.06)' },
+            brand: { DEFAULT: '#8B5CF6', hover: '#7C3AED' },
+            content: { primary: '#F8FAFC', secondary: '#94A3B8' }
           },
           fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
         }
@@ -23,119 +23,147 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #0B0F14; color: #F3F4F6; color-scheme: dark; }
+    :root {
+      --bg: #060816;
+      --surface: #0F172A;
+      --surface-raised: #111827;
+      --border-soft: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.1);
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --muted-low: #64748B;
+      --accent: #8B5CF6;
+      --accent-hover: #7C3AED;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(139,92,246,0.10), transparent 34rem),
+        linear-gradient(180deg, #060816 0%, #070A18 48%, #060816 100%);
+      color: var(--text);
+      color-scheme: dark;
+    }
 
     /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0B0F14; }
-    ::-webkit-scrollbar-thumb { background: #1F2937; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.18); border-radius: 3px; }
 
     /* Autofill */
     input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 50px #141A1F inset !important;
-      -webkit-text-fill-color: #F3F4F6 !important;
+      -webkit-box-shadow: 0 0 0 50px var(--surface-raised) inset !important;
+      -webkit-text-fill-color: var(--text) !important;
     }
+
+    .page-title { color: var(--text); font-weight: 700; letter-spacing: 0; }
+    .page-kicker { color: var(--muted); }
+    .text-muted { color: var(--muted); }
+    .text-muted-low { color: var(--muted-low); }
+    .accent-link { color: #A78BFA; transition: color 0.2s ease; }
+    .accent-link:hover { color: #C4B5FD; }
 
     /* Cards */
     .card {
-      background: #141A1F;
-      border: 1px solid #1F2937;
+      background: rgba(15,23,42,0.86);
+      border: 1px solid var(--border-soft);
       border-radius: 12px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 16px 40px -28px rgba(0, 0, 0, 0.75);
       transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
     }
     .card-hover:hover {
-      border-color: #374151;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); /* shadow-lg */
+      border-color: rgba(139,92,246,0.20);
+      box-shadow: 0 22px 48px -34px rgba(139,92,246,0.45);
       transform: translateY(-2px);
     }
 
     /* Buttons */
     .btn-primary {
-      background: #F43F5E;
+      background: linear-gradient(180deg, #9F7AEA 0%, var(--accent) 100%);
       color: white;
       font-weight: 500;
       border-radius: 8px;
       padding: 10px 24px;
       font-size: 14px;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+      box-shadow: 0 10px 24px -16px rgba(139,92,246,0.9);
     }
     .btn-primary:hover { 
-      background: #E11D48; 
-      transform: scale(1.05);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-xl */
+      background: linear-gradient(180deg, #8B5CF6 0%, var(--accent-hover) 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 16px 32px -20px rgba(139,92,246,0.9);
     }
-    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:active { transform: translateY(0); }
 
     .btn-secondary {
-      background: #141A1F;
-      border: 1px solid #1F2937;
-      color: #F3F4F6;
+      background: rgba(15,23,42,0.72);
+      border: 1px solid var(--border-soft);
+      color: var(--text);
       font-weight: 500;
       border-radius: 8px;
       padding: 10px 24px;
       font-size: 14px;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
     }
     .btn-secondary:hover { 
-      border-color: #374151; 
-      background: #1F2937;
-      transform: scale(1.05);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-xl */
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(17,24,39,0.9);
+      transform: translateY(-1px);
     }
 
     .btn-ghost {
       background: transparent;
-      color: #9CA3AF;
+      color: var(--muted);
       font-weight: 500;
       border-radius: 8px;
       padding: 8px 16px;
       font-size: 14px;
       transition: all 0.2s ease;
     }
-    .btn-ghost:hover { color: #F3F4F6; background: #1A1A1A; }
+    .btn-ghost:hover { color: var(--text); background: rgba(255,255,255,0.04); }
 
     .btn-danger {
       background: transparent;
-      border: 1px solid rgba(239,68,68,0.2);
-      color: #EF4444;
+      border: 1px solid rgba(239,68,68,0.22);
+      color: #F87171;
       font-weight: 500;
       border-radius: 8px;
       padding: 8px 16px;
       font-size: 14px;
       transition: all 0.2s ease;
     }
-    .btn-danger:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); transform: translateY(-1px); }
+    .btn-danger:hover { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.32); transform: translateY(-1px); }
 
     /* Inputs */
     .input-field {
       width: 100%;
-      background: #0B0F14;
-      border: 1px solid #1F2937;
+      background: rgba(6,8,22,0.72);
+      border: 1px solid var(--border-soft);
       border-radius: 8px;
       padding: 10px 16px;
-      color: #F3F4F6;
+      color: var(--text);
       font-size: 14px;
       transition: border-color 0.2s, box-shadow 0.2s;
       outline: none;
     }
-    .input-field::placeholder { color: #9CA3AF; }
-    .input-field:focus { border-color: #F43F5E; box-shadow: 0 0 0 2px rgba(244,63,94,0.15); }
-    .input-field-error { border-color: #EF4444; }
+    .input-field::placeholder { color: var(--muted-low); }
+    .input-field:focus { border-color: rgba(139,92,246,0.55); box-shadow: 0 0 0 3px rgba(139,92,246,0.13); }
+    .input-field-error { border-color: rgba(239,68,68,0.7); }
     .input-field-error:focus { box-shadow: 0 0 0 2px rgba(239,68,68,0.15); }
 
     /* Badges */
-    .badge-pending  { background: rgba(245,158,11,0.1); color: #F59E0B; border: 1px solid rgba(245,158,11,0.2); }
-    .badge-progress { background: rgba(99,102,241,0.1); color: #818CF8; border: 1px solid rgba(99,102,241,0.2); }
-    .badge-done     { background: rgba(16,185,129,0.1); color: #10B981; border: 1px solid rgba(16,185,129,0.2); }
+    .badge-pending  { background: rgba(245,158,11,0.08); color: #FBBF24; border: 1px solid rgba(245,158,11,0.16); }
+    .badge-progress { background: rgba(139,92,246,0.10); color: #C4B5FD; border: 1px solid rgba(139,92,246,0.18); }
+    .badge-done     { background: rgba(16,185,129,0.08); color: #34D399; border: 1px solid rgba(16,185,129,0.16); }
     .badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; }
 
     /* Sidebar / Topbar nav active */
-    .nav-link { color: #9CA3AF; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 8px; transition: color 0.2s, background 0.2s; display: flex; align-items: center; gap: 8px; }
-    .nav-link:hover { color: #F43F5E; background: rgba(244, 63, 94, 0.05); }
-    .nav-link.active { color: #F3F4F6; background: #1F2937; }
+    .nav-link { color: var(--muted); font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 8px; transition: color 0.2s, background 0.2s; display: flex; align-items: center; gap: 8px; }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+    .nav-link.active { color: var(--text); background: rgba(139,92,246,0.12); }
 
     /* Toast */
     @keyframes slideIn { from { transform: translateX(120%); opacity:0; } to { transform: translateX(0); opacity:1; } }
@@ -155,7 +183,7 @@
             'success': 'bg-emerald-950 border-emerald-800 text-emerald-300',
             'danger':  'bg-red-950 border-red-800 text-red-300',
             'warning': 'bg-amber-950 border-amber-800 text-amber-300',
-            'info':    'bg-indigo-950 border-indigo-800 text-indigo-300'
+            'info':    'bg-violet-950 border-violet-800 text-violet-200'
           }.get(category, 'bg-gray-900 border-gray-700 text-gray-300') %}
           <div class="toast flex items-start gap-3 px-4 py-3 rounded-xl border {{ styles }} text-sm shadow-2xl" data-auto-dismiss="true">
             <span class="flex-1 leading-snug">{{ message }}</span>
@@ -167,11 +195,11 @@
 
   <!-- Top Navigation Bar (shown on all authenticated pages) -->
   {% if current_user is defined and current_user.is_authenticated %}
-  <nav style="background:#0B0F14; border-bottom:1px solid #1F2937;" class="sticky top-0 z-40 bg-opacity-90 backdrop-blur-md">
+  <nav style="background:rgba(6,8,22,0.82); border-bottom:1px solid rgba(255,255,255,0.06);" class="sticky top-0 z-40 backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
       <!-- Logo -->
       <a href="{{ url_for('main.dashboard') }}" class="flex items-center gap-3 group">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-[#F43F5E] shadow-[0_2px_10px_rgba(244,63,94,0.3)] transition-transform group-hover:scale-105">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-[#8B5CF6] shadow-[0_10px_24px_-16px_rgba(139,92,246,0.9)] transition-transform group-hover:scale-105">
           <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
@@ -194,18 +222,18 @@
       <!-- Right: User + Logout -->
       <div class="flex items-center gap-6">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-gray-300 bg-[#141A1F] border border-[#1F2937]">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-gray-300 bg-[#111827] border border-white/[0.06]">
             {{ current_user.name[0].upper() }}
           </div>
           <div class="hidden sm:flex flex-col">
             <span class="text-sm font-medium text-gray-300 leading-none">{{ current_user.name }}</span>
-            <span class="text-[10px] text-[#9CA3AF] mt-1">{{ 'Admin' if current_user.is_admin else 'Member' }}</span>
+            <span class="text-[10px] text-[#94A3B8] mt-1">{{ 'Admin' if current_user.is_admin else 'Member' }}</span>
           </div>
         </div>
         
-        <div class="h-4 w-px bg-[#1F2937]"></div>
+        <div class="h-4 w-px bg-white/[0.08]"></div>
 
-        <a href="{{ url_for('auth.logout') }}" class="nav-link !p-2 !text-[#9CA3AF] hover:!text-[#F43F5E]" title="Logout">Sign out</a>
+        <a href="{{ url_for('auth.logout') }}" class="nav-link !p-2 !text-[#94A3B8] hover:!text-white" title="Logout">Sign out</a>
       </div>
     </div>
   </nav>

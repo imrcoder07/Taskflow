@@ -1,47 +1,37 @@
 {% extends "base.html" %}
-{% block title %}TaskFlow — Project Management{% endblock %}
+{% block title %}TaskFlow - Project Management{% endblock %}
 
 {% block body %}
-<div class="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden">
+<div class="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-center px-4 relative overflow-hidden">
+  <div class="absolute inset-x-0 top-4 mx-auto h-64 max-w-4xl rounded-full bg-violet-500/10 blur-3xl pointer-events-none"></div>
 
-  <!-- Background glows -->
-  <div class="absolute -top-60 -left-60 w-[600px] h-[600px] bg-indigo-700/15 rounded-full blur-3xl pointer-events-none"></div>
-  <div class="absolute -bottom-60 -right-60 w-[600px] h-[600px] bg-purple-700/15 rounded-full blur-3xl pointer-events-none"></div>
-
-  <!-- Hero -->
-  <div class="relative text-center max-w-2xl">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-medium mb-6">
-      <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
-      Role-based · Real-time · Production-ready
+  <div class="relative text-center max-w-3xl">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-white/[0.08] text-violet-200 text-xs font-medium mb-7">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+      Role-based workspace for focused teams
     </div>
 
-    <h1 class="text-5xl sm:text-6xl font-bold text-white leading-tight mb-4">
-      Manage Tasks<br/>
-      <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">With Clarity</span>
+    <h1 class="text-4xl sm:text-6xl font-bold text-white leading-tight mb-5">
+      Manage projects and tasks with calm clarity.
     </h1>
-    <p class="text-slate-400 text-lg mb-10 leading-relaxed">
-      TaskFlow gives your team a shared space to track projects,<br class="hidden sm:block"/>
-      assign tasks, and ship faster — together.
+    <p class="text-slate-400 text-base sm:text-lg mb-10 leading-8 max-w-2xl mx-auto">
+      TaskFlow gives teams a structured place to plan work, assign ownership, and keep execution visible without visual noise.
     </p>
 
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="{{ url_for('auth.signup') }}" id="hero-signup"
-        class="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 active:scale-[0.98]">
+      <a href="{{ url_for('auth.signup') }}" id="hero-signup" class="btn-primary w-full sm:w-auto px-8 py-3">
         Get started free
       </a>
-      <a href="{{ url_for('auth.login') }}" id="hero-login"
-        class="w-full sm:w-auto px-8 py-3 rounded-xl border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white font-semibold text-sm transition-all duration-200">
+      <a href="{{ url_for('auth.login') }}" id="hero-login" class="btn-secondary w-full sm:w-auto px-8 py-3">
         Sign in
       </a>
     </div>
 
-    <!-- Feature pills -->
-    <div class="flex flex-wrap justify-center gap-3 mt-12 text-xs text-slate-500">
-      {% for feature in ['Projects', 'Task Assignment', 'Role-based Access', 'Status Tracking', 'Dashboard'] %}
-        <span class="px-3 py-1 rounded-full bg-slate-800/60 border border-slate-700/50">{{ feature }}</span>
+    <div class="flex flex-wrap justify-center gap-3 mt-12 text-xs text-slate-400">
+      {% for feature in ['Projects', 'Task assignment', 'Role-based access', 'Status tracking', 'Team dashboard'] %}
+        <span class="px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.06]">{{ feature }}</span>
       {% endfor %}
     </div>
   </div>
-
 </div>
 {% endblock %}
