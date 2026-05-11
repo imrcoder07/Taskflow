@@ -139,7 +139,8 @@
 
     /* Toast */
     @keyframes slideIn { from { transform: translateX(120%); opacity:0; } to { transform: translateX(0); opacity:1; } }
-    .toast { animation: slideIn 0.3s ease; }
+    .toast { animation: slideIn 0.3s ease; transition: opacity 0.35s ease, transform 0.35s ease; }
+    .toast.is-dismissing { opacity: 0; transform: translateX(24px); }
   </style>
   {% block head %}{% endblock %}
 </head>
@@ -156,7 +157,7 @@
             'warning': 'bg-amber-950 border-amber-800 text-amber-300',
             'info':    'bg-indigo-950 border-indigo-800 text-indigo-300'
           }.get(category, 'bg-gray-900 border-gray-700 text-gray-300') %}
-          <div class="toast flex items-start gap-3 px-4 py-3 rounded-xl border {{ styles }} text-sm shadow-2xl">
+          <div class="toast flex items-start gap-3 px-4 py-3 rounded-xl border {{ styles }} text-sm shadow-2xl" data-auto-dismiss="true">
             <span class="flex-1 leading-snug">{{ message }}</span>
           </div>
         {% endfor %}
@@ -214,5 +215,21 @@
     {% block body %}{% endblock %}
   </main>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const dismissAfterMs = 3500;
+      const transitionMs = 350;
+
+      document.querySelectorAll("[data-auto-dismiss='true']").forEach((toast) => {
+        window.setTimeout(() => {
+          toast.classList.add("is-dismissing");
+
+          window.setTimeout(() => {
+            toast.remove();
+          }, transitionMs);
+        }, dismissAfterMs);
+      });
+    });
+  </script>
 </body>
 </html>
