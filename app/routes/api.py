@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import current_user
 
 from app import db
+from app.forms import COMPLETED_STATUSES
 from app.models import Project, Task, User
 
 api = Blueprint("api", __name__, url_prefix="/api")
@@ -146,6 +147,14 @@ def validate_task_payload(payload, partial=False):
     return cleaned, errors
 
 
+def validate_task_workflow(cleaned, errors, task=None):
+    status = cleaned.get("status", task.status if task else "pending")
+    assigned_to = cleaned.get("assigned_to", task.assigned_to if task else None)
+
+    if assigned_to is None and status in COMPLETED_STATUSES:
+        errors["status"] = "Unassigned tasks cannot be marked as completed."
+
+
 @api.get("/projects")
 def list_projects():
     projects = Project.query.order_by(Project.created_at.desc()).all()
@@ -236,6 +245,7 @@ def create_task():
         return error
 
     cleaned, errors = validate_task_payload(payload)
+    validate_task_workflow(cleaned, errors)
     if errors:
         return error_response("Validation failed.", 400, errors)
 
@@ -270,6 +280,7 @@ def update_task(task_id):
 
     if current_user.is_admin:
         cleaned, errors = validate_task_payload(payload, partial=True)
+        validate_task_workflow(cleaned, errors, task)
     else:
         extra_fields = set(payload) - {"status"}
         cleaned, errors = {}, {}

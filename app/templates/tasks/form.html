@@ -124,4 +124,29 @@
     {% endif %}
   </div>
 </div>
+{% if current_user.is_admin %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const assigneeSelect = document.getElementById("assigned_to");
+    const statusSelect = document.getElementById("status");
+    const doneOption = statusSelect?.querySelector('option[value="done"]');
+
+    if (!assigneeSelect || !statusSelect || !doneOption) {
+      return;
+    }
+
+    const syncCompletedAvailability = () => {
+      const isUnassigned = !assigneeSelect.value || assigneeSelect.value === "0";
+      doneOption.disabled = isUnassigned;
+
+      if (isUnassigned && statusSelect.value === "done") {
+        statusSelect.value = "pending";
+      }
+    };
+
+    assigneeSelect.addEventListener("change", syncCompletedAvailability);
+    syncCompletedAvailability();
+  });
+</script>
+{% endif %}
 {% endblock %}

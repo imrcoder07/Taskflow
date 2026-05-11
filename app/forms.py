@@ -11,6 +11,9 @@ def _stripped(value):
     return value.strip() if isinstance(value, str) else value
 
 
+COMPLETED_STATUSES = {"done", "completed"}
+
+
 class SignupForm(FlaskForm):
     name = StringField("Full Name", validators=[DataRequired(), Length(min=2, max=120)])
     email = StringField("Email Address", validators=[DataRequired(), Email()])
@@ -85,6 +88,16 @@ class TaskForm(FlaskForm):
     def validate_due_date(self, due_date):
         if due_date.data and not self.allow_past_due_date and due_date.data < date.today():
             raise ValidationError("Due date cannot be earlier than today.")
+
+    def validate(self, extra_validators=None):
+        is_valid = super().validate(extra_validators=extra_validators)
+        is_unassigned = not self.assigned_to.data
+
+        if is_unassigned and self.status.data in COMPLETED_STATUSES:
+            self.status.errors.append("Unassigned tasks cannot be marked as completed.")
+            return False
+
+        return is_valid
 
     def validate_project_id(self, project_id):
         if not db_get(Project, project_id.data):

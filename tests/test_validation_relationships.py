@@ -77,6 +77,23 @@ def test_task_create_date_input_has_today_min(client, admin_user):
     assert f'min="{date.today().isoformat()}"'.encode() in response.data
 
 
+def test_task_create_rejects_unassigned_done_status(client, admin_user, project):
+    client.post("/auth/login", data={"email": admin_user.email, "password": "Admin123!"})
+
+    response = client.post("/tasks/new", data={
+        "title": "Unassigned Complete Task",
+        "description": "This should not save.",
+        "status": "done",
+        "due_date": date.today().isoformat(),
+        "project_id": project.id,
+        "assigned_to": 0,
+    }, follow_redirects=True)
+
+    assert response.status_code == 200
+    assert b"Unassigned tasks cannot be marked as completed." in response.data
+    assert Task.query.filter_by(title="Unassigned Complete Task").first() is None
+
+
 def test_admin_can_edit_existing_overdue_task(client, admin_user, project):
     overdue_date = date.today() - timedelta(days=1)
     task = Task(
@@ -103,6 +120,35 @@ def test_admin_can_edit_existing_overdue_task(client, admin_user, project):
     assert response.status_code == 200
     assert b"Task updated successfully!" in response.data
     assert db.session.get(Task, task_id).title == "Already Overdue Updated"
+
+
+def test_admin_cannot_update_task_to_unassigned_done(client, admin_user, project, member_user):
+    task = Task(
+        title="Assigned Task",
+        description="This task has an owner.",
+        status="in_progress",
+        due_date=date.today(),
+        project_id=project.id,
+        assigned_to=member_user.id,
+    )
+    db.session.add(task)
+    db.session.commit()
+    task_id = task.id
+
+    client.post("/auth/login", data={"email": admin_user.email, "password": "Admin123!"})
+    response = client.post(f"/tasks/{task_id}/edit", data={
+        "title": "Assigned Task",
+        "description": "Trying invalid workflow.",
+        "status": "done",
+        "due_date": date.today().isoformat(),
+        "project_id": project.id,
+        "assigned_to": 0,
+    }, follow_redirects=True)
+
+    assert response.status_code == 200
+    assert b"Unassigned tasks cannot be marked as completed." in response.data
+    assert db.session.get(Task, task_id).status == "in_progress"
+    assert db.session.get(Task, task_id).assigned_to == member_user.id
 
 
 def test_deleting_project_deletes_related_tasks(app, project):

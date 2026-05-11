@@ -80,6 +80,45 @@ def test_api_validates_task_relationships(client, admin_user):
     assert Task.query.filter_by(title="Bad Task").first() is None
 
 
+def test_api_rejects_unassigned_done_task_create(client, admin_user, project):
+    login(client, admin_user, "Admin123!")
+
+    response = client.post("/api/tasks", json={
+        "title": "Unassigned Done API Task",
+        "status": "done",
+        "project_id": project.id,
+        "assigned_to": None,
+    })
+
+    errors = response.get_json()["errors"]
+    assert response.status_code == 400
+    assert errors["status"] == "Unassigned tasks cannot be marked as completed."
+    assert Task.query.filter_by(title="Unassigned Done API Task").first() is None
+
+
+def test_api_rejects_update_that_makes_task_unassigned_done(client, admin_user, project, member_user):
+    task = Task(
+        title="Assigned API Task",
+        status="in_progress",
+        project_id=project.id,
+        assigned_to=member_user.id,
+    )
+    db.session.add(task)
+    db.session.commit()
+
+    login(client, admin_user, "Admin123!")
+    response = client.put(f"/api/tasks/{task.id}", json={
+        "status": "done",
+        "assigned_to": None,
+    })
+
+    errors = response.get_json()["errors"]
+    assert response.status_code == 400
+    assert errors["status"] == "Unassigned tasks cannot be marked as completed."
+    assert db.session.get(Task, task.id).status == "in_progress"
+    assert db.session.get(Task, task.id).assigned_to == member_user.id
+
+
 def test_member_only_sees_assigned_tasks(client, member_user, project, admin_user):
     assigned = Task(title="Assigned", status="pending", project_id=project.id, assigned_to=member_user.id)
     hidden = Task(title="Hidden", status="pending", project_id=project.id, assigned_to=admin_user.id)
