@@ -10,6 +10,10 @@ TaskFlow is a full-stack web application that enables structured team collaborat
 
 [**TaskFlow — Live Application**](https://taskflow-mu6q.onrender.com/)
 
+**Admin Credentials (for testing):**
+- **Email:** `admin@taskflow.com`
+- **Password:** `Admin123!`
+
 > _Deployed on Render with a managed PostgreSQL database._
 
 ---
