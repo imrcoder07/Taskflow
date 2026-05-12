@@ -154,6 +154,12 @@ def validate_task_workflow(cleaned, errors, task=None):
     if assigned_to is None and status in COMPLETED_STATUSES:
         errors["status"] = "Unassigned tasks cannot be marked as completed."
 
+    if "due_date" in cleaned:
+        new_due_date = cleaned["due_date"]
+        if new_due_date and (not task or task.due_date != new_due_date):
+            if new_due_date < date.today():
+                errors["due_date"] = "Due date cannot be in the past."
+
 
 @api.get("/projects")
 def list_projects():
