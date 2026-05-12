@@ -1,4 +1,4 @@
-﻿# TaskFlow
+# TaskFlow
 
 > A role-based task and project management system built with Flask, PostgreSQL, and a modern SaaS-inspired interface.
 
@@ -10,9 +10,13 @@ TaskFlow is a full-stack web application that enables structured team collaborat
 
 [**TaskFlow — Live Application**](https://taskflow-mu6q.onrender.com/)
 
-**Admin Credentials (for testing):**
-- **Email:** `admin@taskflow.com`
-- **Password:** `Admin123!`
+## 🔑 Demo Credentials
+
+> These credentials are provided for evaluation and testing purposes only.
+
+### Admin Access
+- **Email:** admin@taskflow.com
+- **Password:** Admin123!
 
 > _Deployed on Render with a managed PostgreSQL database._
 
