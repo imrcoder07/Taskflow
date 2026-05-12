@@ -18,7 +18,7 @@ TaskFlow is a full-stack web application that enables structured team collaborat
 
 | Homepage | Dashboard | Task Management |
 |----------|-----------|-----------------|
-| ![Homepage](docs/screenshots/homepage.png) | ![Dashboard](docs/screenshots/dashboard.png) | ![Tasks](docs/screenshots/tasks.png) |
+| ![Homepage](screenshots/homepage.png) | ![Dashboard](screenshots/dashboard.png) | ![Tasks](screenshots/tasks.png) |
 
 
 ---
